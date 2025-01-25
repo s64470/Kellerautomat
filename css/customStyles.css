@@ -1,0 +1,116 @@
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Text&display=swap');
+
+:root {
+	--fopacity: .3;			/* fill-opacity */
+	--sopacity: .9;			/* stroke-opacity */
+	--swidth: 1;			/* stroke-width */
+	--scolor: #000;		/* stroke color */
+	--green: #71e390;
+	--tcolor: #000;		/* text color */
+	--mspace: 50px;
+}
+
+h1, h2, h3, h4, p, legend, label, button, center { font-family: 'Crimson Text', serif; }
+
+.fi-alert {
+	margin-right: var(--mspace);
+	color: rgb(255, 128, 0);
+}
+
+#popupMessage { margin-left: calc(var(--mspace) * 2); }
+
+table {
+	/* width: 35%; */
+	margin: 0;
+}
+
+th, td {
+	font-size: 10px;
+	text-align: center;
+}
+
+#rowColor { background-color: var(--green); }
+
+svg {
+	/* Scale svg container */
+	transform: scale(.8);
+}
+
+line {
+	stroke: var(--scolor);
+	stroke-width: calc(var(--swidth) * 1.5);
+}
+
+marker { fill: #000; }
+
+.stateColor {
+	fill: #f6ff00;
+	stroke: var(--scolor);
+	stroke-width: var(--swidth);
+	fill-opacity: var(--fopacity);
+	stroke-opacity: var(--sopacity);
+}
+
+.stateChange {
+	fill: var(--green);
+	stroke: var(--scolor);
+	stroke-width: var(--swidth);
+}
+
+sup {
+	color: rgb(255, 0, 0);
+	font-size: 9px;
+}
+
+.stateError {
+	fill: rgb(255, 128, 64);
+	stroke: var(--scolor);
+	stroke-width: var(--swidth);
+	fill-opacity: var(--fopacity);
+	stroke-opacity: var(--sopacity);
+}
+
+.finalCircle {
+	fill: transparent;
+	stroke: var(--scolor);
+	stroke-width: var(--swidth);
+}
+
+polyline {
+	fill: #f6ff00;
+	stroke: var(--scolor);
+	stroke-width: var(--swidth);
+	fill-opacity: var(--fopacity);
+	stroke-opacity: var(--sopacity);
+}
+
+rect {
+	width: 300px;
+	height: 50px;
+	fill: #f6ff00;
+	stroke: var(--scolor);
+	stroke-width: var(--swidth);
+	fill-opacity: var(--fopacity);
+	stroke-opacity: var(--sopacity);
+}
+
+text {
+	fill: var(--tcolor);
+	font-size: .9em;
+}
+
+.showUserHelp { display: none; }
+
+#pathCircleArrow {
+	stroke: var(--scolor);
+	stroke-width: var(--swidth);
+	fill: transparent;
+}
+
+.bezirCurve {
+	fill: none;
+	stroke: var(--scolor);
+	stroke-width: var(--swidth);
+}
+
+#status, #input, #result { margin-left: 20px; }

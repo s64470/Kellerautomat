@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="x-ua-compatible" content="ie=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Projektaufgabe P2: Grammatik und Kellerautomat</title>
+
+		<!-- foundation-float.min.css: Compressed CSS with legacy Float Grid -->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.6.3/dist/css/foundation-float.min.css"
+			  integrity="sha256-4ldVyEvC86/kae2IBWw+eJrTiwNEbUUTmN0zkP4luL4=" crossorigin="anonymous">
+
+		<!-- foundation-prototype.min.css: Compressed CSS with prototyping classes -->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.6.3/dist/css/foundation-prototype.min.css"
+			  integrity="sha256-BiKflOunI0SIxlTOOUCQ0HgwXrRrRwBkIYppEllPIok=" crossorigin="anonymous">
+
+		<!-- foundation-rtl.min.css: Compressed CSS with right-to-left reading direction -->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.6.3/dist/css/foundation-rtl.min.css"
+			  integrity="sha256-F+9Ns8Z/1ZISonBbojH743hsmF3x3AlQdJEeD8DhQsE=" crossorigin="anonymous">
+
+		<!-- Compressed JavaScript -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.js"
+				integrity="sha512-WNLxfP/8cVYL9sj8Jnp6et0BkubLP31jhTG9vhL/F5uEZmg5wEzKoXp1kJslzPQWwPT1eyMiSxlKCgzHLOTOTQ=="
+				crossorigin="anonymous"></script>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.6.3/js/foundation.min.js"
+				integrity="sha512-9cXmvmK1gIDw3Tol6Xg/1SUls/CvBMgedu1aDjT519sQzy7jk+LoezyQqlzClW2LgXww4xEyuqtofg7PtWteLQ=="
+				crossorigin="anonymous"></script>
+
+		<!-- Load external stylesheet files -->
+		<script>
+			// Returns the page location type
+			locationType();
+
+			function locationType() {
+				// Script file is running on local host: Local file, direct from disk (file://path/to/file.html)
+				if (window.location.protocol == 'file:') {
+					console.log('Server Mode: Offline');
+					document.write("<script src='jscript/Kellerautomat.js'><\/script>");
+
+					// Load: foundation icons
+					console.log('Load: Offline Icons..');
+					document.write('<link rel="stylesheet" href="icons/foundation-icons/foundation-icons.css" />');
+
+					console.log('Stylesheet Mode: Offline');
+					document.write('<link rel="stylesheet" href="css/customStyles.css" />');
+				} else {
+					console.log('Server Mode: Online');
+					document.write("<script src='./uploads/Theoretische%20Informatik/Kellerautomat/jscript/Kellerautomat.js'><\/script>");
+
+					// Load: foundation icons
+					console.log('Load: Online Icons..');
+					document.write('<link rel="stylesheet" href="./uploads/Theoretische%20Informatik/Kellerautomat/icons/foundation-icons/foundation-icons.css" />');
+
+					console.log('Stylesheet Mode: Online');
+					document.write('<link rel="stylesheet" href="./uploads/Theoretische%20Informatik/Kellerautomat/css/customStyles.css" />');
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<div class="off-canvas-wrapper">
+			<div class="off-canvas-wrapper-inner" data-off-canvas-wrapper>
+				<div class="off-canvas position-left reveal-for-large" id="my-info" data-off-canvas data-position="left">
+					<div class="row column">
+						<br>
+						<h4>Grammatik und Kellerautomat</h4>
+						<hr>
+						<p>
+							Geben Sie ihre Formel zur Validierung in das Textfeld ein.
+							<i data-tooltip class="fi-info has-tip" title="Hilfe anzeigen" id="help"></i>
+							<input type="text" id="inputTextfield">
+						</p>
+						<p id="showUserHelp" class="showUserHelp">
+							Die nachfolgenden Ausdrücke können zu Testzwecken per Mausklick übernommen werden.<br>
+							Beispiel Eingaben:<br>
+							<select multiple id="selector">
+								<option value="(2*(3-4))">(2*(3-4))</option>
+								<option value="((5/2)*((8-3)-9">((5/2)*((8-3)-9</option>
+								<option value="((3/6)-9)">((3/6)-9)</option>
+								<option value="((7+9)*(6-3">((7+9)*(6-3</option>
+								<option value="5+8-3">5+8-3</option>
+							</select>
+							<br>
+							Nach Prüfung des korrekten Ausdrucks wird das Ergebnis berechnet anderenfalls erfolgt keine Berechnung.
+						</p>
+						<fieldset class="fieldset">
+							<legend>Geschwindigkeit <i data-tooltip class="fi-info has-tip"
+													   title="Hier können Sie die Geschwindigkeit der Applikation ändern (schnell = 1 sek., langsam = 5 sek.)."></i></legend>
+							<input type="radio" name="radioBtn" value="slow" id="slow"><label for="radioBtn">langsam</label>
+							<input type="radio" name="radioBtn" value="fast" id="fast" checked><label for="ratioBtn">schnell</label>
+						</fieldset>
+						<div>
+							<button class="small button float-left" id="run">Simulate</button>
+							<button class="small button float-right" id="restart">Restart</button>
+							<br>
+							<button class="small button float-center" id="random">Generierung gültiger Ausdruck</button>
+							<button class="small button float-center" id="_rand">Generierung Zufallsausdruck</button>
+						</div>
+					</div>
+				</div>
+				<div class="off-canvas-content" data-off-canvas-content>
+					<div class="title-bar hide-for-large">
+						<div class="title-bar-left">
+							<button class="menu-icon" type="button" data-open="my-info"></button>
+							<span class="title-bar-title">Grammatik und Kellerautomat</span>
+						</div>
+					</div>
+					<div class="callout primary">
+						<div class="row column">
+							<h3>
+								Simulation eines Ausdrucks auf korrekte Klammerung eines mathematischen Ausdrucks unter
+								Verwendung eines Kellerautomaten.
+							</h3>
+						</div>
+					</div>
+					<div class="row">
+						<center>Status:<span id="status"></span></center>
+						<center>Eingegebenes Wort:<span id="input"></span></center>
+						<center>Ergebnis des Ausdrucks:<span id="result"></span></center>
+					</div>
+					<div class="grid-x grid-margin-x" style="margin: 0;">
+						<div class="medium-8 cell" style="margin: 0;">
+							<svg width="800" height="500" class="container">
+								<defs>
+									<circle id="circle" cx="0" cy="0" r="25" />
+									<circle id="finalCircle" cx="0" cy="0" r="30" />
+									<marker id="arrow" markerWidth="10" markerHeight="10" refX="0" refY="3"
+											orient="auto" markerUnits="strokeWidth">
+										<path d="M0,0 L0,6 L9,3 z" />
+									</marker>
+								</defs>
+								<text x="100" y="20">Überführungsgraph</text>
+								<line x1="155" y1="200" x2="155" y2="200" marker-end="url(#arrow)" />
+								<use href="#circle" transform="translate(200,200)" id="s0" class="stateColor" />
+								<text x="195 205" y="200 205">s0</text>
+								<!-- Rule: Transiton s0 -> s0 -->
+								<text x="140" y="110">s0 ; ( ; # &rarr; s0 ; ( #</text>
+								<text x="140" y="90">s0 ; ( ; ( &rarr; s0 ; ( (</text>
+								<!-- Rule: Transition s0 -> s1 -->
+								<text x="270" y="190">s0 ; ) ; ( &rarr; s1 ; &epsilon;</text>
+								<line x1="230" y1="200" x2="415" y2="200" marker-end="url(#arrow)" />
+								<!-- Curved circle arrow -->
+								<g>
+									<path d="M 180 170 A 30 30, 0, 1, 1, 220 170" id="pathCircleArrow" />
+									<line x1="220" y1="170" x2="230" y2="170" />
+									<line x1="220" y1="170" x2="220" y2="160" />
+								</g>
+								<use href="#circle" transform="translate(460,200)" id="s1" class="stateColor" />
+								<text x="455 465" y="200 205">s1</text>
+								<!-- Rule: Transition s1 -> s1 -->
+								<text x="410" y="110">s1 ; ) ; ( &rarr; s1 ; &epsilon;</text>
+								<!-- Rule: Transition s1 -> s2 -->
+								<text x="525" y="190">s1 ; &epsilon; ; # &rarr; s2 ; &epsilon;</text>
+								<line x1="490" y1="200" x2="675" y2="200" marker-end="url(#arrow)" />
+								<!-- Curved circle arrow -->
+								<g>
+									<path d="M 440 170 A 30 30, 0, 1, 1, 480 170" id="pathCircleArrow" />
+									<line x1="480" y1="170" x2="490" y2="170" />
+									<line x1="480" y1="170" x2="480" y2="160" />
+								</g>
+								<use href="#circle" transform="translate(725,200)" id="s2" class="stateColor" />
+								<text x="715 725" y="200 205">s2</text>
+								<use href="#finalCircle" transform="translate(725,200)" class="finalCircle" />
+								<!-- Rule: s1 -> s0 -->
+								<text x="270" y="270">s1 ; ( ; ( &rarr; s0 ; ( (</text>
+								<text x="270" y="250">s1 ; ( ; # &rarr; s0 ; ( #</text>
+								<!-- Transition s1 -> s0 -->
+								<path d="M200,235 C200,300 450,300 460,235" class="bezirCurve" />
+								<polyline points="190,240 200,235 210,242" />
+
+								<!-- Set characters to stack -->
+								<!--<text x="200" y="409">Kellerspeicher</text>-->
+								<!--<rect x="300" y="360"></rect>-->
+								<!-- Write values to stack -->
+								<!--<text id="writeValueToStack" x="310" y="390"></text>-->
+							</svg>
+						</div>
+						<div class="medium-4 cell">
+						<p>Überführungstabelle</p>
+						<table>
+							<thead>
+								<tr class="row">
+									<th>Zustand</th>
+									<th>Eingabesymbol</th>
+									<th>Kellerzeichen</th>
+									<th>&rarr;</th>
+									<th>neuer Zustand</th>
+									<th>Keller</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr class="row" id="t1">
+									<td>s0</td>
+									<td>(</td>
+									<td># | (</td>
+									<td>&#8631;</td>
+									<td>s0</td>
+									<td>push: (# | ((</td>
+								</tr>
+								<tr class="row" id="t2">
+									<td>s0</td>
+									<td>)</td>
+									<td>(</td>
+									<td>&rarr;</td>
+									<td>s1</td>
+									<td>pop: &epsilon;<sup>**</sup></td>
+								</tr>
+								<tr class="row" id="t3">
+									<td>s1</td>
+									<td>)</td>
+									<td>(</td>
+									<td>&#8631;</td>
+									<td>s1</td>
+									<td>pop: &epsilon;<sup>**</sup></td>
+								</tr>
+								<tr class="row" id="t4">
+									<td>s1</td>
+									<td>(</td>
+									<td># | (</td>
+									<td>&rarr;</td>
+									<td>s0</td>
+									<td>push: (# | ((</td>
+								</tr>
+								<tr class="row" id="t5">
+									<td>s1</td>
+									<td>&epsilon;<sup>**</sup></td>
+									<td>#</td>
+									<td>&rarr;</td>
+									<td>s2</td>
+									<td>nop: #</td>
+								</tr>
+								<tr class="row" id="6">
+									<td colspan="6">
+										<sup>**</sup>
+										<i data-tooltip class="fi-info has-tip"
+										   title="&epsilon; Es wird das leere Wort gelesen oder zurückgeschrieben"></i>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<div class="reveal" id="popup-modal" data-reveal>
+							<h1><i class="fi-alert"></i>Eingabefehler!</h1>
+							<p class="lead" id="popupMessage">Die Eingabe muss mit einer geöffneten Klammer '(' beginnen.</p>
+							<button class="close-button" data-close aria-label="Close modal" type="button">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
